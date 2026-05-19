@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="referrer" content="no-referrer">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>20260519 Homework - Online Worksheet</title>
+    <style>
+        :root {
+            --pink-color: #4A90E2; 
+            --pink-hover: #357ABD;
+            --green-color: #7CB342;
+            --green-hover: #689F38;
+            --bg-color: #F9F9F9;
+            --card-bg: #FFFFFF;
+            --text-color: #333333;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, "Microsoft JhengHei";
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .student-info-panel {
+            background: #FFF3E0;
+            border-left: 6px solid #FF9800;
+            padding: 15px 20px;
+            border-radius: 4px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .student-info-panel label { font-size: 1.1rem; font-weight: bold; color: #E65100; }
+        .student-info-panel input[type="text"] {
+            padding: 8px 15px; font-size: 1rem; border: 2px solid #FFB74D; border-radius: 6px; width: 250px; outline: none;
+        }
+        h1 { text-align: center; color: var(--pink-color); margin-bottom: 30px; border-bottom: 2px dashed var(--pink-color); padding-bottom: 15px; }
+        h2 { color: var(--text-color); display: flex; align-items: center; gap: 10px; font-size: 1.3rem; margin-top: 40px; background: #F0F4C3; padding: 10px 15px; border-radius: 8px; }
+        h3 { color: var(--pink-color); margin-top: 25px; margin-bottom: 10px; border-bottom: 1px solid #ddd; padding-bottom: 5px; }
+        .audio-btn { background-color: var(--green-color); color: white; border: none; padding: 6px 14px; border-radius: 20px; cursor: pointer; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 5px; }
+        .audio-btn:hover { background-color: var(--green-hover); }
+        .quiz-group { margin-bottom: 20px; padding: 15px; border-left: 4px solid var(--pink-color); background: #EBF3FB; border-radius: 0 8px 8px 0; }
+        .quiz-title { font-size: 1.1rem; font-weight: bold; margin-bottom: 10px; display: flex; align-items: center; gap: 15px; }
+        .options-container { display: flex; gap: 12px; flex-wrap: wrap; }
+        .option-label { background: white; border: 1px solid #ddd; padding: 8px 16px; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+        .option-label:hover { border-color: var(--pink-color); background: #EBF3FB; }
+        input[type="radio"] { display: none; }
+        input[type="radio"]:checked + .option-label { background-color: var(--pink-color); color: white; border-color: var(--pink-color); }
+        .feedback-text { margin-top: 10px; font-size: 0.95rem; font-weight: bold; padding: 6px 12px; border-radius: 4px; display: none; }
+        .correct-banner { background-color: #E8F5E9; color: #2E7D32; border-left: 4px solid #4CAF50; }
+        .incorrect-banner { background-color: #FFEBEE; color: #C62828; border-left: 4px solid #F44336; }
+        .general-audio-container { margin: 15px 0; display: flex; align-items: center; gap: 15px; background: #FAFAFA; padding: 12px; border-radius: 6px; border: 1px solid #E0E0E0; }
+        .general-audio-container audio { flex-grow: 1; max-width: 400px; }
+        .word-bank { display: flex; gap: 15px; background: #FFF9C4; padding: 12px 20px; border-radius: 8px; border: 1px solid #FFF59D; margin-bottom: 20px; font-weight: bold; }
+        .submit-panel { text-align: center; margin-top: 40px; }
+        .btn-submit { background-color: var(--pink-color); color: white; font-size: 1.1rem; border: none; padding: 12px 40px; border-radius: 25px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .btn-submit:hover { background-color: var(--pink-hover); }
+        .btn-submit:disabled { background-color: #A0A0A0; cursor: not-allowed; }
+        .report-box { margin-top: 30px; background: #F5F5F5; border: 1px solid #E0E0E0; border-radius: 8px; padding: 20px; text-align: left; display: none; }
+        .report-textarea { width: 100%; height: 160px; font-family: monospace; font-size: 0.95rem; padding: 10px; box-sizing: border-box; border: 1px solid #CCC; border-radius: 4px; background-color: #FFF; resize: none; }
+        .btn-copy { background-color: var(--green-color); color: white; border: none; padding: 10px 25px; border-radius: 4px; font-size: 1rem; font-weight: bold; cursor: pointer; margin-top: 12px; }
+        .copy-toast { margin-left: 15px; color: var(--pink-color); font-weight: bold; display: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>20260519 Homework</h1>
+
+    <div class="student-info-panel">
+        <label for="studentName">👤 Student Name: </label>
+        <input type="text" id="studentName" placeholder="Enter your full name">
+    </div>
+
+    <form id="quizForm">
+        <h2>Part 1: Listen and choose the correct Pinyin and tone</h2>
+        <p>Click the green button to listen, then select the correct Pinyin.</p>
+
+        <div class="quiz-group">
+            <div class="quiz-title">1. 不客氣 <button type="button" class="audio-btn" onclick="speak('不客氣')">🔊 Play</button></div>
+            <div class="options-container">
+                <input type="radio" name="q1" id="q1_a" value="A"><label for="q1_a" class="option-label">búkèqì</label>
+                <input type="radio" name="q1" id="q1_b" value="B"><label for="q1_b" class="option-label">bùkěqì</label>
+                <input type="radio" name="q1" id="q1_c" value="C"><label for="q1_c" class="option-label">búkèqi</label>
+            </div><div id="feedback_q1" class="feedback-text"></div>
+        </div>
+
+        <div class="quiz-group">
+            <div class="quiz-title">2. 歡迎 <button type="button" class="audio-btn" onclick="speak('歡迎')">🔊 Play</button></div>
+            <div class="options-container">
+                <input type="radio" name="q2" id="q2_a" value="A"><label for="q2_a" class="option-label">huānyíng</label>
+                <input type="radio" name="q2" id="q2_b" value="B"><label for="q2_b" class="option-label">huǎnyíng</label>
+                <input type="radio" name="q2" id="q2_c" value="C"><label for="q2_c" class="option-label">huānyǐng</label>
+            </div><div id="feedback_q2" class="feedback-text"></div>
+        </div>
+
+        <div class="quiz-group">
+            <div class="quiz-title">3. 你好 <button type="button" class="audio-btn" onclick="speak('你好')">🔊 Play</button></div>
+            <div class="options-container">
+                <input type="radio" name="q3" id="q3_a" value="A"><label for="q3_a" class="option-label">níhǎo</label>
+                <input type="radio" name="q3" id="q3_b" value="B"><label for="q3_b" class="option-label">nǐhǎo</label>
+                <input type="radio" name="q3" id="q3_c" value="C"><label for="q3_c" class="option-label">nihǎo</label>
+            </div><div id="feedback_q3" class="feedback-text"></div>
+        </div>
+
+        <div class="quiz-group">
+            <div class="quiz-title">4. 烏龍茶 <button type="button" class="audio-btn" onclick="speak('烏龍茶')">🔊 Play</button></div>
+            <div class="options-container">
+                <input type="radio" name="q4" id="q4_a" value="A"><label for="q4_a" class="option-label">wūlóngchá</label>
+                <input type="radio" name="q4" id="q4_b" value="B"><label for="q4_b" class="option-label">wǔlóngchá</label>
+                <input type="radio" name="q4" id="q4_c" value="C"><label for="q4_c" class="option-label">wūlóngchǎ</label>
+            </div><div id="feedback_q4" class="feedback-text"></div>
+        </div>
+
+        <div class="quiz-group">
+            <div class="quiz-title">5. 好喝 <button type="button" class="audio-btn" onclick="speak('好喝')">🔊 Play</button></div>
+            <div class="options-container">
+                <input type="radio" name="q5" id="q5_a" value="A"><label for="q5_a" class="option-label">hǎohē</label>
+                <input type="radio" name="q5" id="q5_b" value="B"><label for="q5_b" class="option-label">háohē</label>
+                <input type="radio" name="q5" id="q5_c" value="C"><label for="q5_c" class="option-label">hǎohé</label>
+            </div><div id="feedback_q5" class="feedback-text"></div>
+        </div>
+
+        <div class="quiz-group">
+            <div class="quiz-title">6. 喜歡 <button type="button" class="audio-btn" onclick="speak('喜歡')">🔊 Play</button></div>
+            <div class="options-container">
+                <input type="radio" name="q6" id="q6_a" value="A"><label for="q6_a" class="option-label">xǐhuān</label>
+                <input type="radio" name="q6" id="q6_b" value="B"><label for="q6_b" class="option-label">xīhuān</label>
+                <input type="radio" name="q6" id="q6_c" value="C"><label for="q6_c" class="option-label">xǐhuand</label>
+            </div><div id="feedback_q6" class="feedback-text"></div>
+        </div>
+
+        <div class="quiz-group">
+            <div class="quiz-title">7. 台灣 <button type="button" class="audio-btn" onclick="speak('台灣')">🔊 Play</button></div>
+            <div class="options-container">
+                <input type="radio" name="q7" id="q7_a" value="A"><label for="q7_a" class="option-label">Táiwān</label>
+                <input type="radio" name="q7" id="q7_b" value="B"><label for="q7_b" class="option-label">Tǎiwān</label>
+                <input type="radio" name="q7" id="q7_c" value="C"><label for="q7_c" class="option-label">Táiwǎn</label>
+            </div><div id="feedback_q7" class="feedback-text"></div>
+        </div>
+
+        <div class="quiz-group">
+            <div class="quiz-title">8. 美國 <button type="button" class="audio-btn" onclick="speak('美國')">🔊 Play</button></div>
+            <div class="options-container">
+                <input type="radio" name="q8" id="q8_a" value="A"><label for="q8_a" class="option-label">Měiguó</label>
+                <input type="radio" name="q8" id="q8_b" value="B"><label for="q8_b" class="option-label">Méiguó</label>
+                <input type="radio" name="q8" id="q8_c" value="C"><label for="q8_c" class="option-label">Měiguǒ</label>
+            </div><div id="feedback_q8" class="feedback-text"></div>
+        </div>
+
+        <div class="quiz-group">
+            <div class="quiz-title">9. 日本 <button type="button" class="audio-btn" onclick="speak('日本')">🔊 Play</button></div>
+            <div class="options-container">
+                <input type="radio" name="q9" id="q9_a" value="A"><label for="q9_a" class="option-label">Rìběn</label>
+                <input type="radio" name="q9" id="q9_b" value="B"><label for="q9_b" class="option-label">Rīběn</label>
+                <input type="radio" name="q9" id="q9_c" value="C"><label for="q9_c" class="option-label">Rìbēn</label>
+            </div><div id="feedback_q9" class="feedback-text"></div>
+        </div>
+
+        <div class="quiz-group">
+            <div class="quiz-title">10. 咖啡 <button type="button" class="audio-btn" onclick="speak('咖啡')">🔊 Play</button></div>
+            <div class="options-container">
+                <input type="radio" name="q10" id="q10_a" value="A"><label for="q10_a" class="option-label">kāfēi</label>
+                <input type="radio" name="q10" id="q10_b" value="B"><label for="q10_b" class="option-label">kǎfēi</label>
+                <input type="radio" name="q10" id="q10_c" value="C"><label for="q10_c" class="option-label">kāfěi</label>
+            </div><div id="feedback_q10" class="feedback-text"></div>
+        </div>
+
+        <div class="quiz-group">
+            <div class="quiz-title">11. 先生 <button type="button" class="audio-btn" onclick="speak('先生')">🔊 Play</button></div>
+            <div class="options-container">
+                <input type="radio" name="q11" id="q11_a" value="A"><label for="q11_a" class="option-label">xiānshēng</label>
+                <input type="radio" name="q11" id="q11_b" value="B"><label for="q11_b" class="option-label">xiánshēng</label>
+                <input type="radio" name="q11" id="q11_c" value="C"><label for="q11_c" class="option-label">xiānshěng</label>
+            </div><div id="feedback_q11" class="feedback-text"></div>
+        </div>
+
+        <div class="quiz-group">
+            <div class="quiz-title">12. 請問 <button type="button" class="audio-btn" onclick="speak('請問')">🔊 Play</button></div>
+            <div class="options-container">
+                <input type="radio" name="q12" id="q12_a" value="A"><label for="q12_a" class="option-label">qǐngwèn</label>
+                <input type="radio" name="q12" id="q12_b" value="B"><label for="q12_b" class="option-label">qīngwèn</label>
+                <input type="radio" name="q12" id="q12_c" value="C"><label for="q12_c" class="option-label">qǐngwén</label>
+            </div><div id="feedback_q12" class="feedback-text"></div>
+        </div>
+
+        <div class="quiz-group">
+            <div class="quiz-title">13. 小姐 <button type="button" class="audio-btn" onclick="speak('小姐')">🔊 Play</button></div>
+            <div class="options-container">
+                <input type="radio" name="q13" id="q13_a" value="A"><label for="q13_a" class="option-label">xiáojiě</label>
+                <input type="radio" name="q13" id="q13_b" value="B"><label for="q13_b" class="option-label">xiǎojiě</label>
+                <input type="radio" name="q13" id="q13_c" value="C"><label for="q13_c" class="option-label">xiaojiě</label>
+            </div><div id="feedback_q13" class="feedback-text"></div>
+        </div>
+
+        <div class="quiz-group">
+            <div class="quiz-title">14. 哪國 <button type="button" class="audio-btn" onclick="speak('哪國')">🔊 Play</button></div>
+            <div class="options-container">
+                <input type="radio" name="q14" id="q14_a" value="A"><label for="q14_a" class="option-label">nǎguó</label>
+                <input type="radio" name="q14" id="q14_b" value="B"><label for="q14_b" class="option-label">naguó</label>
+                <input type="radio" name="q14" id="q14_c" value="C"><label for="q14_c" class="option-label">nǎguǒ</label>
+            </div><div id="feedback_q14" class="feedback-text"></div>
+        </div>
+
+        <div class="quiz-group">
+            <div class="quiz-title">15. 對不起 <button type="button" class="audio-btn" onclick="speak('對不起')">🔊 Play</button></div>
+            <div class="options-container">
+                <input type="radio" name="q15" id="q15_a" value="A"><label for="q15_a" class="option-label">duìbùqǐ</label>
+                <input type="radio" name="q15" id="q15_b" value="B"><label for="q15_b" class="option-label">duìbùqī</label>
+                <input type="radio" name="q15" id="q15_c" value="C"><label for="q15_c" class="option-label">duíbùqǐ</label>
+            </div><div id="feedback_q15" class="feedback-text"></div>
+        </div>
+
+
+        <h2>Part 2: Listening Comprehension</h2>
+        
+        <h3>題目 A：Listen to what is said about Miss Chen and choose the correct answer to each question below.</h3>
+        <div class="general-audio-container">
+            <strong>Audio Track 01-2:</strong> <audio controls id="audio_p2a"></audio>
+        </div>
+        <p>Listen to the track and select the correct answer.</p>
+
+        <div class="quiz-group">
+            <div class="quiz-title">1. 請問陳小姐喜歡喝什麼？</div>
+            <div class="options-container">
+                <input type="radio" name="p2a_q1" id="p2a_q1_a" value="A"><label for="p2a_q1_a" class="option-label">a. 咖啡</label>
+                <input type="radio" name="p2a_q1" id="p2a_q1_b" value="B"><label for="p2a_q1_b" class="option-label">b. 茶</label>
+            </div><div id="feedback_p2a_q1" class="feedback-text"></div>
+        </div>
+
+        <div class="quiz-group">
+            <div class="quiz-title">2. 請問陳小姐是不是日本人？</div>
+            <div class="options-container">
+                <input type="radio" name="p2a_q2" id="p2a_q2_a" value="A"><label for="p2a_q2_a" class="option-label">a. 是</label>
+                <input type="radio" name="p2a_q2" id="p2a_q2_b" value="B"><label for="p2a_q2_b" class="option-label">b. 不是</label>
+            </div><div id="feedback_p2a_q2" class="feedback-text"></div>
+        </div>
+
+        <div class="quiz-group">
+            <div class="quiz-title">3. 請問陳小姐是台灣人嗎？</div>
+            <div class="options-container">
+                <input type="radio" name="p2a_q3" id="p2a_q3_a" value="A"><label for="p2a_q3_a" class="option-label">a. 是</label>
+                <input type="radio" name="p2a_q3" id="p2a_q3_b" value="B"><label for="p2a_q3_b" class="option-label">b. 不是</label>
+            </div><div id="feedback_p2a_q3" class="feedback-text"></div>
+        </div>
+
+
+        <h3>題目 B：I would like to know more about Mr. Lee and Miss Wang.</h3>
+        <div class="general-audio-container">
+            <strong>Audio Track 01-3:</strong> <audio controls id="audio_p2b"></audio>
+        </div>
+        <p>Please select the appropriate symbol from the box below for each item.</p>
+
+        <div class="word-bank">
+            <span>a. 李先生</span> &nbsp;&nbsp;&nbsp;&nbsp; <span>b. 王小姐</span> &nbsp;&nbsp;&nbsp;&nbsp; <span>c. 美國人</span> &nbsp;&nbsp;&nbsp;&nbsp; <span>d. 日本人</span>
+        </div>
+
+        <div class="quiz-group">
+            <div class="quiz-title">1. ( &nbsp;&nbsp;&nbsp;&nbsp; ) 喜歡喝咖啡。</div>
+            <div class="options-container">
+                <input type="radio" name="p2b_q1" id="p2b_q1_a" value="a"><label for="p2b_q1_a" class="option-label">a</label>
+                <input type="radio" name="p2b_q1" id="p2b_q1_b" value="b"><label for="p2b_q1_b" class="option-label">b</label>
+                <input type="radio" name="p2b_q1" id="p2b_q1_c" value="c"><label for="p2b_q1_c" class="option-label">c</label>
+                <input type="radio" name="p2b_q1" id="p2b_q1_d" value="d"><label for="p2b_q1_d" class="option-label">d</label>
+            </div><div id="feedback_p2b_q1" class="feedback-text"></div>
+        </div>
+
+        <div class="quiz-group">
+            <div class="quiz-title">2. ( &nbsp;&nbsp;&nbsp;&nbsp; ) 喜歡喝茶。</div>
+            <div class="options-container">
+                <input type="radio" name="p2b_q2" id="p2b_q2_a" value="a"><label for="p2b_q2_a" class="option-label">a</label>
+                <input type="radio" name="p2b_q2" id="p2b_q2_b" value="b"><label for="p2b_q2_b" class="option-label">b</label>
+                <input type="radio" name="p2b_q2" id="p2b_q2_c" value="c"><label for="p2b_q2_c" class="option-label">c</label>
+                <input type="radio" name="p2b_q2" id="p2b_q2_d" value="d"><label for="p2b_q2_d" class="option-label">d</label>
+            </div><div id="feedback_p2b_q2" class="feedback-text"></div>
+        </div>
+
+        <div class="quiz-group">
+            <div class="quiz-title">3. 李先生是 ( &nbsp;&nbsp;&nbsp;&nbsp; )。</div>
+            <div class="options-container">
+                <input type="radio" name="p2b_q3" id="p2b_q3_a" value="a"><label for="p2b_q3_a" class="option-label">a</label>
+                <input type="radio" name="p2b_q3" id="p2b_q3_b" value="b"><label for="p2b_q3_b" class="option-label">b</label>
+                <input type="radio" name="p2b_q3" id="p2b_q3_c" value="c"><label for="p2b_q3_c" class="option-label">c</label>
+                <input type="radio" name="p2b_q3" id="p2b_q3_d" value="d"><label for="p2b_q3_d" class="option-label">d</label>
+            </div><div id="feedback_p2b_q3" class="feedback-text"></div>
+        </div>
+
+        <div class="quiz-group">
+            <div class="quiz-title">4. 王小姐是 ( &nbsp;&nbsp;&nbsp;&nbsp; )。</div>
+            <div class="options-container">
+                <input type="radio" name="p2b_q4" id="p2b_q4_a" value="a"><label for="p2b_q4_a" class="option-label">a</label>
+                <input type="radio" name="p2b_q4" id="p2b_q4_b" value="b"><label for="p2b_q4_b" class="option-label">b</label>
+                <input type="radio" name="p2b_q4" id="p2b_q4_c" value="c"><label for="p2b_q4_c" class="option-label">c</label>
+                <input type="radio" name="p2b_q4" id="p2b_q4_d" value="d"><label for="p2b_q4_d" class="option-label">d</label>
+            </div><div id="feedback_p2b_q4" class="feedback-text"></div>
+        </div>
+
+
+        <h3>題目 C：Listen to the dialogue. Place a ◯ if the statement is true or an ✕ if the statement is false.</h3>
+        <div class="general-audio-container">
+            <strong>Audio Track 01-4:</strong> <audio controls id="audio_p2c"></audio>
+        </div>
+        <p>Listen to the audio track and evaluate the statements below.</p>
+
+        <div class="quiz-group">
+            <div class="quiz-title">1. 李小姐是臺灣人。</div>
+            <div class="options-container">
+                <input type="radio" name="p2c_q1" id="p2c_q1_o" value="O"><label for="p2c_q1_o" class="option-label">◯ True</label>
+                <input type="radio" name="p2c_q1" id="p2c_q1_x" value="X"><label for="p2c_q1_x" class="option-label">✕ False</label>
+            </div><div id="feedback_p2c_q1" class="feedback-text"></div>
+        </div>
+
+        <div class="quiz-group">
+            <div class="quiz-title">2. 李小姐叫美美。</div>
+            <div class="options-container">
+                <input type="radio" name="p2c_q2" id="p2c_q2_o" value="O"><label for="p2c_q2_o" class="option-label">◯ True</label>
+                <input type="radio" name="p2c_q2" id="p2c_q2_x" value="X"><label for="p2c_q2_x" class="option-label">✕ False</label>
+            </div><div id="feedback_p2c_q2" class="feedback-text"></div>
+        </div>
+
+        <div class="quiz-group">
+            <div class="quiz-title">3. 陳先生叫開文。</div>
+            <div class="options-container">
+                <input type="radio" name="p2c_q3" id="p2c_q3_o" value="O"><label for="p2c_q3_o" class="option-label">◯ True</label>
+                <input type="radio" name="p2c_q3" id="p2c_q3_x" value="X"><label for="p2c_q3_x" class="option-label">✕ False</label>
+            </div><div id="feedback_p2c_q3" class="feedback-text"></div>
+        </div>
+
+        <div class="quiz-group">
+            <div class="quiz-title">4. 李小姐接陳先生。</div>
+            <div class="options-container">
+                <input type="radio" name="p2c_q4" id="p2c_q4_o" value="O"><label for="p2c_q4_o" class="option-label">◯ True</label>
+                <input type="radio" name="p2c_q4" id="p2c_q4_x" value="X"><label for="p2c_q4_x" class="option-label">✕ False</label>
+            </div><div id="feedback_p2c_q4" class="feedback-text"></div>
+        </div>
+
+        <div class="submit-panel">
+            <button type="button" id="submitBtn" class="btn-submit" onclick="checkAnswers()">Submit Worksheet</button>
+            <div id="scoreDisplay" class="score-display"></div>
+        </div>
+
+        <div id="reportBox" class="report-box">
+            <h3>📋 Your Answer Report Has Been Generated</h3>
+            <textarea id="reportText" class="report-textarea" readonly></textarea>
+            <div>
+                <button type="button" class="btn-copy" onclick="copyReportText()">📋 One-Click Copy Report</button>
+                <span id="copyToast" class="copy-toast">✓ Copied to clipboard!</span>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    // 智慧路徑引擎：自動相容本地打開環境與網路伺服器環境
+    let currentUrl = window.location.href;
+    let audioBase = "";
+
+    if (currentUrl.startsWith('file:///')) {
+        // 如果是本機開啟，直接使用同層資料夾相對路徑，避開瀏覽器file協定的安全性隱私阻擋
+        audioBase = ""; 
+    } else {
+        // 如果是在網路伺服器上，補上完整的線上絕對 URL 前綴路徑
+        audioBase = currentUrl.substring(0, currentUrl.lastIndexOf('/') + 1);
+    }
+    
+    document.getElementById('audio_p2a').src = audioBase + "01-2.mp3";
+    document.getElementById('audio_p2b').src = audioBase + "01-3.mp3";
+    document.getElementById('audio_p2c').src = audioBase + "01-4.mp3";
+
+    function speak(text) {
+        const url = `https://translate.google.com/translate_tts?ie=UTF-8&tl=zh-TW&client=tw-ob&q=${encodeURIComponent(text)}`;
+        const audio = new Audio(url);
+        audio.play().catch(e => {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const u = new SpeechSynthesisUtterance(text); u.lang = 'zh-TW';
+                window.speechSynthesis.speak(u);
+            }
+        });
+    }
+
+    // 正確答案配置
+    const answers = {
+        q1:'A', q2:'A', q3:'A', q4:'A', q5:'A', q6:'A', q7:'A', q8:'A', q9:'A', q10:'A', q11:'A', q12:'A', q13:'A', q14:'A', q15:'A',
+        p2a_q1:'B', p2a_q2:'B', p2a_q3:'B',
+        p2b_q1:'b', p2b_q2:'a', p2b_q3:'c', p2b_q4:'d',
+        p2c_q1:'X', p2c_q2:'X', p2c_q3:'O', p2c_q4:'X'
+    };
+
+    const labels = {
+        p2a_q1: 'b. 茶', p2a_q2: 'b. 不是', p2a_q3: 'b. 不是',
+        p2b_q1: 'b. 王小姐', p2b_q2: 'a. 李先生', p2b_q3: 'c. 美國人', p2b_q4: 'd. 日本人',
+        p2c_q1: '✕ False', p2c_q2: '✕ False', p2c_q3: '◯ True', p2c_q4: '✕ False'
+    };
+
+    const sheetUrl = "https://script.google.com/macros/s/AKfycbzLwyq1Qk1qGcGz2H86Rn89F2WkiTPUqh89Lmg3oqYRnQok02nInUKSjBh3Re4J9lfx/exec";
+
+    function checkAnswers() {
+        const nameInput = document.getElementById('studentName');
+        const name = nameInput.value.trim();
+        if (!name) { alert("Please enter your 'Student Name'!"); nameInput.focus(); return; }
+
+        let score = 0, total = Object.keys(answers).length;
+        let r1 = [], r2a = [], r2b = [], r2c = [];
+        const form = document.getElementById('quizForm');
+
+        // 檢查 Part 1 (1~15題)
+        for(let i=1; i<=15; i++) {
+            const sel = form.querySelector(`input[name="q${i}"]:checked`);
+            const val = sel ? sel.value : "Unanswered";
+            r1.push(`(${i})${val}`);
+            const fb = document.getElementById(`feedback_q${i}`); 
+            fb.style.display = 'inline-block';
+            
+            const cL = answers[`q${i}`];
+            const txt = form.querySelector(`label[for="q${i}_${cL.toLowerCase()}"]`).innerText;
+            if(sel && sel.value === cL) { 
+                score++; 
+                fb.innerHTML="✅ Correct!"; 
+                fb.className="feedback-text correct-banner"; 
+            } else { 
+                fb.innerHTML=`❌ Incorrect. Correct: <strong>${txt}</strong>`; 
+                fb.className="feedback-text incorrect-banner"; 
+            }
+        }
+
+        // 檢查 Part 2 題目 A (1~3題)
+        for(let i=1; i<=3; i++) {
+            const sel = form.querySelector(`input[name="p2a_q${i}"]:checked`);
+            const val = sel ? sel.value : "Unanswered";
+            r2a.push(`(A-Q${i})${val}`);
+            const fb = document.getElementById(`feedback_p2a_q${i}`); 
+            fb.style.display = 'inline-block';
+            
+            if(sel && sel.value === answers[`p2a_q${i}`]) { 
+                score++; 
+                fb.innerHTML="✅ Correct!"; 
+                fb.className="feedback-text correct-banner"; 
+            } else { 
+                fb.innerHTML=`❌ Incorrect. Correct: <strong>${labels['p2a_q'+i]}</strong>`; 
+                fb.className="feedback-text incorrect-banner"; 
+            }
+        }
+
+        // 檢查 Part 2 題目 B (1~4題)
+        for(let i=1; i<=4; i++) {
+            const sel = form.querySelector(`input[name="p2b_q${i}"]:checked`);
+            const val = sel ? sel.value : "Unanswered";
+            r2b.push(`(B-Q${i})${val}`);
+            const fb = document.getElementById(`feedback_p2b_q${i}`); 
+            fb.style.display = 'inline-block';
+            
+            if(sel && sel.value === answers[`p2b_q${i}`]) { 
+                score++; 
+                fb.innerHTML="✅ Correct!"; 
+                fb.className="feedback-text correct-banner"; 
+            } else { 
+                fb.innerHTML=`❌ Incorrect. Correct: <strong>${labels['p2b_q'+i]}</strong>`; 
+                fb.className="feedback-text incorrect-banner"; 
+            }
+        }
+
+        // 檢查 Part 2 題目 C (1~4題)
+        for(let i=1; i<=4; i++) {
+            const sel = form.querySelector(`input[name="p2c_q${i}"]:checked`);
+            const val = sel ? sel.value : "Unanswered";
+            r2c.push(`(C-Q${i})${val}`);
+            const fb = document.getElementById(`feedback_p2c_q${i}`); 
+            fb.style.display = 'inline-block';
+            
+            if(sel && sel.value === answers[`p2c_q${i}`]) { 
+                score++; 
+                fb.innerHTML="✅ Correct!"; 
+                fb.className="feedback-text correct-banner"; 
+            } else { 
+                fb.innerHTML=`❌ Incorrect. Correct: <strong>${labels['p2c_q'+i]}</strong>`; 
+                fb.className="feedback-text incorrect-banner"; 
+            }
+        }
+
+        // 顯示總分與產出文字報告
+        document.getElementById('scoreDisplay').innerHTML = `Worksheet Evaluated! Total Score: ${score} / ${total} pts!`;
+        document.getElementById('scoreDisplay').style.display = 'block';
+        
+        const rep = `👤 Name: ${name}\n🎯 Score: ${score}/${total}\n📝 Part 1: ${r1.join(' ')}\n📝 Part 2-A: ${r2a.join(' ')}\n📝 Part 2-B: ${r2b.join(' ')}\n📝 Part 2-C: ${r2c.join(' ')}`;
+        document.getElementById('reportText').value = rep; 
+        document.getElementById('reportBox').style.display = 'block';
+        document.getElementById('scoreDisplay').scrollIntoView({ behavior: 'smooth' });
+
+        // 表單同步到 Google Sheet
+        const sBtn = document.getElementById('submitBtn');
+        sBtn.disabled = true; 
+        sBtn.innerText = "⌛ Submitting...";
+        
+        fetch(sheetUrl, { 
+            method: "POST", 
+            mode: "no-cors", 
+            headers: { "Content-Type": "application/json" }, 
+            body: JSON.stringify({ 
+                name: name, 
+                score: `${score}/${total}`, 
+                p1: r1.join(' '), 
+                p2: r2a.join(' ') + " | " + r2b.join(' ') + " | " + r2c.join(' ')
+            }) 
+        })
+        .then(() => { alert("🚀 Score synced successfully!"); sBtn.innerText = "✓ Submitted"; })
+        .catch(() => { alert("⚠️ Network error."); sBtn.disabled = false; sBtn.innerText = "Submit Worksheet"; });
+    }
+
+    function copyReportText() {
+        const t = document.getElementById('reportText'); t.select(); t.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(t.value).then(() => {
+            const toast = document.getElementById('copyToast'); toast.style.display = 'inline';
+            setTimeout(() => toast.style.display = 'none', 3000);
+        });
+    }
+</script>
+</body>
+</html>
